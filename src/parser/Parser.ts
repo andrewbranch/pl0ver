@@ -1,5 +1,25 @@
 import { Lexer } from '../lexer/Lexer';
-import { ProgramNode, BlockNode, ConstDeclarationNode, VariableDeclartionNode, ProcedureDeclarationNode, ConstAssignmentNode, ExpressionNode, NumericLiteralExpressionNode, SyntaxNode, IdentifierExpressionNode, ArithmeticExpressionNode, ParenthesizedExpressionNode, isArithmeticOperatorToken, ArithmeticOperatorTokenSyntaxKind, StatementNode } from './SyntaxNode';
+import { ProgramNode,
+  BlockNode,
+  ConstDeclarationNode,
+  VariableDeclartionNode,
+  ProcedureDeclarationNode,
+  ConstAssignmentNode,
+  ExpressionNode,
+  NumericLiteralExpressionNode,
+  SyntaxNode,
+  IdentifierExpressionNode,
+  ArithmeticExpressionNode,
+  ParenthesizedExpressionNode,
+  isArithmeticOperatorToken,
+  ArithmeticOperatorTokenSyntaxKind,
+  StatementNode,
+  AssignmentStatementNode,
+  CallStatementNode,
+  BlockBodyStatementNode,
+  ConditionalStatementNode,
+  WhileLoopStatementNode,
+} from './SyntaxNode';
 import { SyntaxToken } from '../lexer/SyntaxToken';
 import { SyntaxKind } from '../lexer/SyntaxKind';
 import { getArithmeticOperatorPrecedence } from '../util/syntaxFacts';
@@ -115,16 +135,63 @@ export class Parser {
   }
 
   private parseProcedureDeclaration(): ProcedureDeclarationNode {
-    throw new Error('Not implemented yet');
+    const pos = this.pos;
+    const procedureKeywordToken = this.matchToken(SyntaxKind.ProcedureKeyword);
+    this.skipSingleLineTrivia();
+    const identifierToken = this.matchToken(SyntaxKind.Identifier);
+    this.skipSingleLineTrivia();
+    this.matchToken(SyntaxKind.SemicolonToken);
+    this.skipTrivia();
+    const block = this.parseBlock();
+    this.skipSingleLineTrivia();
+    this.matchToken(SyntaxKind.SemicolonToken);
+    return new ProcedureDeclarationNode(
+      pos,
+      this.getText(pos, this.pos),
+      procedureKeywordToken,
+      identifierToken,
+      block
+    );
   }
 
   private parseStatement(): StatementNode {
+    switch (this.currentToken.kind) {
+      case SyntaxKind.Identifier:
+        return this.parseAssignmentStatement();
+      case SyntaxKind.CallKeyword:
+        return this.parseCallStatement();
+      case SyntaxKind.BeginKeyword:
+        return this.parseBlockBodyStatement();
+      case SyntaxKind.IfKeyword:
+        return this.parseConditionalStatement();
+      default:
+        return this.parseWhileLoopStatement();
+    }
+  }
+
+  private parseAssignmentStatement(): AssignmentStatementNode {
+    throw new Error('Not implemented yet');
+  }
+
+  private parseCallStatement(): CallStatementNode {
+    throw new Error('Not implemented yet');
+  }
+
+  private parseBlockBodyStatement(): BlockBodyStatementNode {
+    throw new Error('Not implemented yet');
+  }
+
+  private parseConditionalStatement(): ConditionalStatementNode {
+    throw new Error('Not implemented yet');
+  }
+
+  private parseWhileLoopStatement(): WhileLoopStatementNode {
     throw new Error('Not implemented yet');
   }
 
   public parseExpression(): ExpressionNode {
     if (this.currentToken.kind === SyntaxKind.NumericLiteral) {
-      const nextToken = this.peekIgnoringSingleLineWhitespaceTrivia(1);
+      const nextToken = this.peekIgnoringSingleLineTrivia(1);
       if (nextToken && isArithmeticOperatorToken(nextToken)) {
         return this.parseArithmeticExpression();
       }
@@ -238,7 +305,7 @@ export class Parser {
     return this.tokens[this.index + by];
   }
 
-  private peekIgnoringSingleLineWhitespaceTrivia(by: number): SyntaxToken | undefined {
+  private peekIgnoringSingleLineTrivia(by: number): SyntaxToken | undefined {
     while (true) {
       const token = this.peek(by++);
       if (!token) return undefined;

@@ -15,7 +15,7 @@ export type ArithmeticOperatorTokenSyntaxKind = SyntaxKind.PlusToken
   | SyntaxKind.SlashToken;
 
 export type ExpressionNode = NumericLiteralExpressionNode | IdentifierExpressionNode | ArithmeticExpressionNode | ParenthesizedExpressionNode;
-export type StatementNode = AssignmentStatementNode | CallStatementNode | BlockBodyStatementNode;
+export type StatementNode = AssignmentStatementNode | CallStatementNode | BlockBodyStatementNode | ConditionalStatementNode | WhileLoopStatementNode;
 export type ConditionNode = OddConditionNode | ComparisonConditionNode;
 
 export function isArithmeticOperatorToken(token: SyntaxToken): token is SyntaxToken<ArithmeticOperatorTokenSyntaxKind> {
@@ -112,6 +112,7 @@ export class ProcedureDeclarationNode extends SyntaxNode {
   constructor(
     pos: number,
     text: string,
+    public procedureKeywordToken: SyntaxToken<SyntaxKind.ProcedureKeyword>,
     public identifierToken: SyntaxToken<SyntaxKind.Identifier>,
     public block: BlockNode,
   ) {
