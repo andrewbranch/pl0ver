@@ -3,8 +3,8 @@ import { SyntaxToken } from './SyntaxToken';
 import { isSingleLineWhitespaceCharacter, isNewlineCharacter, isNumeral, isLetter, isIdentifierCharacter } from '../util/text';
 
 export class Lexer {
-  private text = '';
   private position = 0;
+  public text = '';
 
   constructor(text: string) {
     this.setText(text);

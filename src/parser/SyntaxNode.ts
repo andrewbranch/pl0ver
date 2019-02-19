@@ -24,10 +24,10 @@ export abstract class SyntaxNode {
 }
 
 export class ProgramNode extends SyntaxNode {
-  public readonly children: BlockNode[];
-  constructor(pos: number, text: string, public blocks: BlockNode[]) {
+  public readonly children: [BlockNode];
+  constructor(pos: number, text: string, public block: BlockNode) {
     super(NodeKind.Program, pos, text);
-    this.children = blocks;
+    this.children = [block];
   }
 }
 
@@ -51,7 +51,12 @@ export class BlockNode extends SyntaxNode {
 
 export class ConstDeclarationNode extends SyntaxNode {
   public readonly children: ConstAssignmentNode[];
-  constructor(pos: number, text: string, public assignments: ConstAssignmentNode[]) {
+  constructor(
+    pos: number,
+    text: string,
+    public constKeywordToken: SyntaxToken<SyntaxKind.ConstKeyword>,
+    public assignments: ConstAssignmentNode[],
+  ) {
     super(NodeKind.ConstDeclaration, pos, text);
     this.children = assignments;
   }
