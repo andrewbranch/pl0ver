@@ -1,7 +1,7 @@
 {
   "name": "pl0ver",
   "version": "1.0.0",
-  "description": "A PL/0 compiler, made as an exercise. ",
+  "description": "A PL/0 compiler, made as an exercise.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
