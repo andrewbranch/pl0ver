@@ -1,0 +1,19 @@
+{
+  "name": "pl0ver",
+  "version": "1.0.0",
+  "description": "A PL/0 compiler, made as an exercise. ",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "author": "Andrew Branch <andrew@wheream.io>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.6",
+    "@types/node": "^11.9.4",
+    "jest": "^24.1.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3"
+  }
+}

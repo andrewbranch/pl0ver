@@ -1,0 +1,426 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lexer works 1`] = `
+Array [
+  SyntaxToken {
+    "__debugKind": "VarKeyword",
+    "kind": 29,
+    "value": "VAR",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "CommaToken",
+    "kind": 3,
+    "value": ",",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "squ",
+  },
+  SyntaxToken {
+    "__debugKind": "SemicolonToken",
+    "kind": 15,
+    "value": ";",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+
+",
+  },
+  SyntaxToken {
+    "__debugKind": "ProcedureKeyword",
+    "kind": 26,
+    "value": "PROCEDURE",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "square",
+  },
+  SyntaxToken {
+    "__debugKind": "SemicolonToken",
+    "kind": 15,
+    "value": ";",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "BeginKeyword",
+    "kind": 19,
+    "value": "BEGIN",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "   ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "squ",
+  },
+  SyntaxToken {
+    "__debugKind": "ColonEqualToken",
+    "kind": 2,
+    "value": ":=",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "StarToken",
+    "kind": 17,
+    "value": "*",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "EndKeyword",
+    "kind": 23,
+    "value": "END",
+  },
+  SyntaxToken {
+    "__debugKind": "SemicolonToken",
+    "kind": 15,
+    "value": ";",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+
+",
+  },
+  SyntaxToken {
+    "__debugKind": "BeginKeyword",
+    "kind": 19,
+    "value": "BEGIN",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "   ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "ColonEqualToken",
+    "kind": 2,
+    "value": ":=",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "NumericLiteral",
+    "kind": 30,
+    "value": "1",
+  },
+  SyntaxToken {
+    "__debugKind": "SemicolonToken",
+    "kind": 15,
+    "value": ";",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "   ",
+  },
+  SyntaxToken {
+    "__debugKind": "WhileKeyword",
+    "kind": 28,
+    "value": "WHILE",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "LessThanEqualToken",
+    "kind": 11,
+    "value": "<=",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "NumericLiteral",
+    "kind": 30,
+    "value": "10",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "DoKeyword",
+    "kind": 22,
+    "value": "DO",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "   ",
+  },
+  SyntaxToken {
+    "__debugKind": "BeginKeyword",
+    "kind": 19,
+    "value": "BEGIN",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "      ",
+  },
+  SyntaxToken {
+    "__debugKind": "CallKeyword",
+    "kind": 20,
+    "value": "CALL",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "square",
+  },
+  SyntaxToken {
+    "__debugKind": "SemicolonToken",
+    "kind": 15,
+    "value": ";",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "      ",
+  },
+  SyntaxToken {
+    "__debugKind": "BadToken",
+    "kind": 0,
+    "value": "!",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "squ",
+  },
+  SyntaxToken {
+    "__debugKind": "SemicolonToken",
+    "kind": 15,
+    "value": ";",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "      ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "ColonEqualToken",
+    "kind": 2,
+    "value": ":=",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "Identifier",
+    "kind": 31,
+    "value": "x",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "PlusToken",
+    "kind": 14,
+    "value": "+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": " ",
+  },
+  SyntaxToken {
+    "__debugKind": "NumericLiteral",
+    "kind": 30,
+    "value": "1",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "WhitespaceTrivia",
+    "kind": 33,
+    "value": "   ",
+  },
+  SyntaxToken {
+    "__debugKind": "EndKeyword",
+    "kind": 23,
+    "value": "END",
+  },
+  SyntaxToken {
+    "__debugKind": "NewlineTrivia",
+    "kind": 32,
+    "value": "
+",
+  },
+  SyntaxToken {
+    "__debugKind": "EndKeyword",
+    "kind": 23,
+    "value": "END",
+  },
+  SyntaxToken {
+    "__debugKind": "DotToken",
+    "kind": 4,
+    "value": ".",
+  },
+  SyntaxToken {
+    "__debugKind": "EOFToken",
+    "kind": 5,
+    "value": undefined,
+  },
+]
+`;
