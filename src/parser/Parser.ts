@@ -1,7 +1,8 @@
 import { Lexer } from '../lexer/Lexer';
-import { ProgramNode, BlockNode, ConstDeclarationNode, VariableDeclartionNode, ProcedureDeclarationNode, ConstAssignmentNode } from './SyntaxNode';
+import { ProgramNode, BlockNode, ConstDeclarationNode, VariableDeclartionNode, ProcedureDeclarationNode, ConstAssignmentNode, ExpressionNode, NumericLiteralExpressionNode, SyntaxNode, IdentifierExpressionNode, ArithmeticExpressionNode, ParenthesizedExpressionNode, isArithmeticOperatorToken, ArithmeticOperatorTokenSyntaxKind, StatementNode } from './SyntaxNode';
 import { SyntaxToken } from '../lexer/SyntaxToken';
 import { SyntaxKind } from '../lexer/SyntaxKind';
+import { getArithmeticOperatorPrecedence } from '../util/syntaxFacts';
 
 export interface Diagnostic {
   pos: number;
@@ -23,9 +24,6 @@ export class Parser {
     } else {
       this.lexer = textOrLexer;
     }
-  }
-
-  public parse(): ProgramNode {
     while (true) {
       const token = this.lexer.lex();
       this.tokens.push(token);
@@ -33,7 +31,9 @@ export class Parser {
         break;
       }
     }
-    
+  }
+
+  public parse(): ProgramNode {
     this.skipTrivia();
     const programNode = new ProgramNode(0, this.lexer.text, this.parseBlock());
     return programNode;
@@ -71,56 +71,37 @@ export class Parser {
 
   private parseConstDeclaration(): ConstDeclarationNode {
     const pos = this.pos;
-    const token = this.advance() as SyntaxToken<SyntaxKind.ConstKeyword>;
+    const token = this.matchToken(SyntaxKind.ConstKeyword);
     this.skipSingleLineTrivia();
     let assignments: ConstAssignmentNode[] = [];
     while (this.currentToken.kind !== SyntaxKind.SemicolonToken && this.currentToken.kind !== SyntaxKind.NewlineTrivia) {
       assignments.push(this.parseConstAssignment());
       this.skipSingleLineTrivia();
     }
-    const lastTokenPos = this.pos;
-    const semicolonToken = this.advance();
-    if (semicolonToken.kind !== SyntaxKind.SemicolonToken) {
-      this.diagnostics.push({
-        pos: lastTokenPos,
-        message: '‘;’ expected',
-      });
-    }
+    this.matchToken(SyntaxKind.SemicolonToken);
 
     return new ConstDeclarationNode(pos, this.getText(pos, this.pos), token, assignments);
   }
 
   private parseConstAssignment(): ConstAssignmentNode {
     const pos = this.pos;
-    const leftIdentifier = this.advance() as SyntaxToken<SyntaxKind.Identifier>;
-    if (leftIdentifier.kind !== SyntaxKind.Identifier) {
-      this.diagnostics.push({ pos, message: 'Identifier expected' });
-    }
+    const leftIdentifier = this.matchToken(SyntaxKind.Identifier);
     this.skipSingleLineTrivia();
-    const equalTokenPos = this.pos;
-    const equalToken = this.advance() as SyntaxToken<SyntaxKind.EqualToken>;
-    if (equalToken.kind !== SyntaxKind.EqualToken) {
-      this.diagnostics.push({ pos: equalTokenPos, message: '‘=’ expected' });
-    }
+    const equalToken = this.matchToken(SyntaxKind.EqualToken);
     this.skipSingleLineTrivia();
-    const expression = this.parseExpression();
+    const expression = this.parseNumericLiteralExpression();
 
     return new ConstAssignmentNode(pos, this.getText(pos, this.pos), leftIdentifier, equalToken, expression);
   }
 
   private parseVariableDeclaration(): VariableDeclartionNode {
     const pos = this.pos;
-    const varToken = this.advance() as SyntaxToken<SyntaxKind.VarKeyword>;
+    const varToken = this.matchToken(SyntaxKind.VarKeyword);
     this.skipSingleLineTrivia();
     let identifiers: SyntaxToken<SyntaxKind.Identifier>[] = [];
     while (true) {
-      const identifierPos = this.pos;
-      const token = this.advance();
-      if (token.kind === SyntaxKind.Identifier) {
-        identifiers.push(token as SyntaxToken<SyntaxKind.Identifier>);
-      } else {
-        this.diagnostics.push({ pos: identifierPos, message: 'Identifier expected' });
-      }
+      const token = this.matchToken(SyntaxKind.Identifier);
+      identifiers.push(token);
       this.skipSingleLineTrivia();
       const next = this.advance();
       if (next.kind !== SyntaxKind.CommaToken) {
@@ -128,27 +109,118 @@ export class Parser {
       }
     }
     this.skipSingleLineTrivia();
-    const endTokenPos = this.pos;
-    const endToken = this.advance();
-    if (endToken.kind !== SyntaxKind.SemicolonToken) {
-      this.diagnostics.push({ pos: endTokenPos, message: '‘;’ expected' });
+    this.matchToken(SyntaxKind.SemicolonToken);
+
+    return new VariableDeclartionNode(pos, this.getText(pos, this.pos), varToken, identifiers);
+  }
+
+  private parseProcedureDeclaration(): ProcedureDeclarationNode {
+    throw new Error('Not implemented yet');
+  }
+
+  private parseStatement(): StatementNode {
+    throw new Error('Not implemented yet');
+  }
+
+  public parseExpression(): ExpressionNode {
+    if (this.currentToken.kind === SyntaxKind.NumericLiteral) {
+      const nextToken = this.peekIgnoringSingleLineWhitespaceTrivia(1);
+      if (nextToken && isArithmeticOperatorToken(nextToken)) {
+        return this.parseArithmeticExpression();
+      }
+    }
+    return this.parsePrimaryExpression();
+  }
+
+  private parsePrimaryExpression(): ExpressionNode {
+    switch (this.currentToken.kind) {
+      case SyntaxKind.OpenParenthesisToken:
+        return this.parseParenthesizedExpression();
+      case SyntaxKind.Identifier:
+        return this.parseIdentifierExpression();
+    }
+    return this.parseNumericLiteralExpression();
+  }
+
+  private parseParenthesizedExpression(): ParenthesizedExpressionNode {
+    const pos = this.pos;
+    const openParenthesisToken = this.matchToken(SyntaxKind.OpenParenthesisToken);
+    this.skipSingleLineTrivia();
+    const expression = this.parseExpression();
+    this.skipSingleLineTrivia();
+    const closeParenthesisToken = this.matchToken(SyntaxKind.CloseParenthesisToken);
+    return new ParenthesizedExpressionNode(
+      pos,
+      this.getText(pos, this.pos),
+      openParenthesisToken,
+      expression,
+      closeParenthesisToken
+    );
+  }
+
+  private parseArithmeticExpression(parentPrecedence = 0): ExpressionNode {
+    const pos = this.pos;
+    let left = this.parsePrimaryExpression();
+    while (true) {
+      this.skipSingleLineTrivia();
+      const operatorToken = this.currentToken;
+      const precedence = getArithmeticOperatorPrecedence(operatorToken.kind);
+      if (precedence === 0 || precedence <= parentPrecedence) {
+        break;
+      }
+      this.advance();
+      this.skipSingleLineTrivia();
+      const right = this.parseArithmeticExpression(precedence);
+      left = new ArithmeticExpressionNode(
+        pos,
+        this.getText(pos, this.pos),
+        left,
+        operatorToken as SyntaxToken<ArithmeticOperatorTokenSyntaxKind>,
+        right
+      );
     }
 
-    return new VariableDeclartionNode(pos, this.getText(pos, this.pos), identifiers);
+    return left;
+  }
+
+  private parseNumericLiteralExpression(): NumericLiteralExpressionNode {
+    const pos = this.pos;
+    const numericLiteralToken = this.matchToken(SyntaxKind.NumericLiteral);
+    this.skipSingleLineTrivia();
+    return new NumericLiteralExpressionNode(pos, this.getText(pos, this.pos), numericLiteralToken);
+  }
+
+  private parseIdentifierExpression(): IdentifierExpressionNode {
+    const pos = this.pos;
+    const identifierToken = this.matchToken(SyntaxKind.Identifier);
+    this.skipSingleLineTrivia();
+    return new IdentifierExpressionNode(pos, this.getText(pos, this.pos), identifierToken);
   }
 
   private skipSingleLineTrivia(): void {
-    const { kind } = this.currentToken;
-    while (kind === SyntaxKind.WhitespaceTrivia) {
+    while (this.currentToken.kind === SyntaxKind.WhitespaceTrivia) {
       this.advance();
     }
   }
 
   private skipTrivia(): void {
-    const { kind } = this.currentToken;
-    while (kind === SyntaxKind.WhitespaceTrivia || kind === SyntaxKind.NewlineTrivia) {
+    while (this.currentToken.kind === SyntaxKind.WhitespaceTrivia
+      || this.currentToken.kind === SyntaxKind.NewlineTrivia
+    ) {
       this.advance();
     }
+  }
+
+  private matchToken<T extends SyntaxKind>(kind: T): SyntaxToken<T> {
+    if (this.currentToken.kind === kind) {
+      return this.advance() as SyntaxToken<T>;
+    }
+    this.diagnostics.push({
+      pos: this.pos,
+      message: `Expected ${SyntaxKind[this.currentToken.kind]}, but received ${SyntaxKind[kind]}`
+    });
+
+    return new SyntaxToken(kind);
   }
 
   private advance(): SyntaxToken {
@@ -160,6 +232,18 @@ export class Parser {
 
   private get currentToken(): SyntaxToken {
     return this.tokens[this.index];
+  }
+
+  private peek(by: number): SyntaxToken | undefined {
+    return this.tokens[this.index + by];
+  }
+
+  private peekIgnoringSingleLineWhitespaceTrivia(by: number): SyntaxToken | undefined {
+    while (true) {
+      const token = this.peek(by++);
+      if (!token) return undefined;
+      if (token.kind !== SyntaxKind.WhitespaceTrivia) return token;
+    }
   }
 
   private getText(start: number, end: number): string {

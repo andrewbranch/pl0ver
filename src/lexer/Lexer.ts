@@ -134,7 +134,7 @@ export class Lexer {
 
   private advanceWhile(predicate: (text: string) => boolean): string {
     let text = '';
-    while (predicate(this.getText())) {
+    while (this.getText() && predicate(this.getText())) {
       text += this.advance();
     }
     return text;

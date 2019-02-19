@@ -16,6 +16,7 @@ export enum NodeKind {
   OddCondition,
   ComparisonCondition,
 
+  ParenthesizedExpression,
   NumberLiteralExpression,
   IdentifierExpression,
   ArithmeticExpression,

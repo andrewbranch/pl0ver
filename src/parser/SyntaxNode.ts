@@ -14,13 +14,27 @@ export type ArithmeticOperatorTokenSyntaxKind = SyntaxKind.PlusToken
   | SyntaxKind.StarToken
   | SyntaxKind.SlashToken;
 
-export type ExpressionNode = NumericLiteralExpressionNode | IdentifierExpressionNode | ArithmeticExpressionNode;
+export type ExpressionNode = NumericLiteralExpressionNode | IdentifierExpressionNode | ArithmeticExpressionNode | ParenthesizedExpressionNode;
 export type StatementNode = AssignmentStatementNode | CallStatementNode | BlockBodyStatementNode;
 export type ConditionNode = OddConditionNode | ComparisonConditionNode;
+
+export function isArithmeticOperatorToken(token: SyntaxToken): token is SyntaxToken<ArithmeticOperatorTokenSyntaxKind> {
+  const { kind } = token;
+  return kind === SyntaxKind.PlusToken
+    || kind === SyntaxKind.MinusToken
+    || kind === SyntaxKind.StarToken
+    || kind === SyntaxKind.SlashToken;
+}
 
 export abstract class SyntaxNode {
   constructor(public kind: NodeKind, public pos: number, public text: string) {}
   public abstract readonly children: SyntaxNode[] | undefined;
+  public visualize(depth = 0): string {
+    return [
+      ' '.repeat(depth * 2) + NodeKind[this.kind],
+      ...(this.children || []).map(child => child.visualize(depth + 1)),
+    ].join('\n');
+  }
 }
 
 export class ProgramNode extends SyntaxNode {
@@ -82,6 +96,7 @@ export class VariableDeclartionNode extends SyntaxNode {
   constructor(
     pos: number,
     text: string,
+    public varToken: SyntaxToken<SyntaxKind.VarKeyword>,
     public identifierTokens: SyntaxToken<SyntaxKind.Identifier>[],
   ) {
     super(NodeKind.VariableDeclaration, pos, text);
@@ -205,6 +220,20 @@ export class ComparisonConditionNode extends SyntaxNode {
   }
 }
 
+export class ParenthesizedExpressionNode extends SyntaxNode {
+  public readonly children: [ExpressionNode];
+  constructor(
+    pos: number,
+    text: string,
+    public openParenthesisToken: SyntaxToken<SyntaxKind.OpenParenthesisToken>,
+    public expression: ExpressionNode,
+    public closeParenthesisToken: SyntaxToken<SyntaxKind.CloseParenthesisToken>,
+  ) {
+    super(NodeKind.ParenthesizedExpression, pos, text);
+    this.children = [expression];
+  }
+}
+
 export class NumericLiteralExpressionNode extends SyntaxNode {
   constructor(
     pos: number,
@@ -216,6 +245,10 @@ export class NumericLiteralExpressionNode extends SyntaxNode {
 
   public get children() {
     return undefined;
+  }
+
+  public visualize(depth = 0): string {
+    return ' '.repeat(depth * 2) + NodeKind[this.kind] + `(${this.numericLiteralToken.value})`;
   }
 }
 
@@ -231,6 +264,10 @@ export class IdentifierExpressionNode extends SyntaxNode {
   public get children() {
     return undefined;
   }
+
+  public visualize(depth = 0): string {
+    return ' '.repeat(depth * 2) + NodeKind[this.kind] + `(${this.identifierToken.value})`;
+  }
 }
 
 export class ArithmeticExpressionNode extends SyntaxNode {
@@ -244,5 +281,12 @@ export class ArithmeticExpressionNode extends SyntaxNode {
   ) {
     super(NodeKind.ArithmeticExpression, pos, text);
     this.children = [leftExpression, rightExpression];
+  }
+
+  public visualize(depth = 0): string {
+    return [
+      ' '.repeat(depth * 2) + NodeKind[this.kind] + ` (${this.operatorToken.value})`,
+      ...this.children.map(child => child.visualize(depth + 1)),
+    ].join('\n');    
   }
 }

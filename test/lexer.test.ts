@@ -20,4 +20,16 @@ describe('Lexer', () => {
 
     expect(syntaxList).toMatchSnapshot();
   });
+
+  it('can lex a simple expression', () => {
+    const lexer = new Lexer('3 + 4');
+    const syntaxList: SyntaxToken[] = [];
+    while (true) {
+      const token = lexer.lex();
+      syntaxList.push(token);
+      if (token.kind === SyntaxKind.EOFToken) {
+        break;
+      }
+    }
+  });
 });
